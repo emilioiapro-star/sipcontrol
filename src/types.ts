@@ -1,5 +1,6 @@
 export type ThemeMode = 'dark' | 'light' | 'auto';
 export type DrinkCategory = 'alcohol' | 'no_alcohol';
+export type AlertSoundType = 'crystal' | 'pulse' | 'beep' | 'alarm';
 
 export type Drink = {
   id: string;
@@ -32,6 +33,7 @@ export type Settings = {
   pinSalt: string | null;
   lockEnabled: boolean;
   alertSoundEnabled?: boolean;
+  alertSoundType?: AlertSoundType;
 };
 
 export type ExportPayloadV1 = {

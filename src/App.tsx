@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, ensureSeedData } from './db';
-import type { Drink, DrinkEvent, Settings, ThemeMode } from './types';
+import type { AlertSoundType, Drink, DrinkEvent, Settings, ThemeMode } from './types';
 import { toDayKey, getMonthGrid } from './utils/date';
 import { exportData, parseAndImport } from './utils/exportImport';
 import { verifyPin } from './utils/crypto';
@@ -27,28 +27,53 @@ const getAudioContext = (): AudioContext | null => {
   return sharedAudioContext;
 };
 
-const playLimitSound = async () => {
+const playLimitSound = async (soundType: AlertSoundType = 'crystal') => {
   const ctx = getAudioContext();
   if (!ctx) return;
   if (ctx.state === 'suspended') {
     await ctx.resume();
   }
 
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
   const now = ctx.currentTime;
-  osc.type = 'triangle';
-  osc.frequency.setValueAtTime(920, now);
-  osc.frequency.exponentialRampToValueAtTime(760, now + 0.16);
+  const makeTone = (
+    startAt: number,
+    startFreq: number,
+    endFreq: number,
+    duration: number,
+    type: OscillatorType,
+    maxGain: number
+  ) => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(startFreq, startAt);
+    osc.frequency.exponentialRampToValueAtTime(endFreq, startAt + duration);
+    gain.gain.setValueAtTime(0.0001, startAt);
+    gain.gain.exponentialRampToValueAtTime(maxGain, startAt + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, startAt + duration);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(startAt);
+    osc.stop(startAt + duration + 0.02);
+  };
 
-  gain.gain.setValueAtTime(0.0001, now);
-  gain.gain.exponentialRampToValueAtTime(0.05, now + 0.015);
-  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.17);
-
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-  osc.start(now);
-  osc.stop(now + 0.18);
+  if (soundType === 'crystal') {
+    makeTone(now, 950, 760, 0.18, 'triangle', 0.05);
+    return;
+  }
+  if (soundType === 'pulse') {
+    makeTone(now, 520, 520, 0.12, 'sine', 0.045);
+    makeTone(now + 0.15, 720, 620, 0.14, 'sine', 0.045);
+    return;
+  }
+  if (soundType === 'beep') {
+    makeTone(now, 1100, 1080, 0.08, 'square', 0.035);
+    makeTone(now + 0.11, 1100, 1080, 0.08, 'square', 0.035);
+    return;
+  }
+  makeTone(now, 880, 780, 0.12, 'sawtooth', 0.04);
+  makeTone(now + 0.14, 880, 780, 0.12, 'sawtooth', 0.04);
+  makeTone(now + 0.28, 880, 780, 0.12, 'sawtooth', 0.04);
 };
 
 function App() {
@@ -164,10 +189,15 @@ function App() {
     await db.events.add(event);
 
     const newCount = await db.events.where('dayKey').equals(event.dayKey).count();
+    const selectedSound = liveSettings.alertSoundType ?? 'crystal';
     if (newCount >= liveSettings.dailyLimitCount) {
-      setToast(`Límite diario alcanzado (${newCount}/${liveSettings.dailyLimitCount}).`);
+      const msg =
+        newCount === liveSettings.dailyLimitCount
+          ? `Límite diario alcanzado (${newCount}/${liveSettings.dailyLimitCount}).`
+          : `Límite superado (${newCount}/${liveSettings.dailyLimitCount}).`;
+      setToast(msg);
       if ('vibrate' in navigator) navigator.vibrate([160, 90, 160]);
-      if (liveSettings.alertSoundEnabled) playLimitSound();
+      if (liveSettings.alertSoundEnabled) await playLimitSound(selectedSound);
     } else {
       setToast(`+1 ${drink.emoji} ${drink.name}`);
     }
@@ -366,6 +396,11 @@ function App() {
             onLimitChange={(value) => updateSettings({ dailyLimitCount: Math.max(1, value || 1) })}
             onLockToggle={(value) => updateSettings({ lockEnabled: value })}
             onSoundToggle={(value) => updateSettings({ alertSoundEnabled: value })}
+            onSoundTypeChange={(sound) => updateSettings({ alertSoundType: sound })}
+            onTestSound={async () => {
+              await playLimitSound(settings.alertSoundType ?? 'crystal');
+              setToast('Sonido de prueba reproducido.');
+            }}
             onLockNow={() => setLockState('locked')}
             onSetupPin={() => setPinSetupMode('setup')}
             onChangePin={handleChangePin}

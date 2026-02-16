@@ -64,6 +64,7 @@ export const ensureSeedData = async (): Promise<void> => {
     pinSalt: null,
     lockEnabled: true,
     alertSoundEnabled: true,
+    alertSoundType: 'crystal',
   };
 
   await db.transaction('rw', db.drinks, db.settings, async () => {

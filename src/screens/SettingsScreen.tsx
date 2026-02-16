@@ -1,4 +1,4 @@
-import type { Settings, ThemeMode } from '../types';
+import type { AlertSoundType, Settings, ThemeMode } from '../types';
 
 type Props = {
   settings: Settings | null;
@@ -6,6 +6,8 @@ type Props = {
   onLimitChange: (value: number) => void;
   onLockToggle: (value: boolean) => void;
   onSoundToggle: (value: boolean) => void;
+  onSoundTypeChange: (sound: AlertSoundType) => void;
+  onTestSound: () => void;
   onLockNow: () => void;
   onSetupPin: () => void;
   onChangePin: () => void;
@@ -20,6 +22,8 @@ export const SettingsScreen = ({
   onLimitChange,
   onLockToggle,
   onSoundToggle,
+  onSoundTypeChange,
+  onTestSound,
   onLockNow,
   onSetupPin,
   onChangePin,
@@ -93,6 +97,21 @@ export const SettingsScreen = ({
             onChange={(e) => onSoundToggle(e.target.checked)}
           />
         </label>
+        <label>
+          Tipo de sonido
+          <select
+            value={settings?.alertSoundType ?? 'crystal'}
+            onChange={(e) => onSoundTypeChange(e.target.value as AlertSoundType)}
+          >
+            <option value="crystal">Crystal</option>
+            <option value="pulse">Pulse</option>
+            <option value="beep">Beep</option>
+            <option value="alarm">Alarm</option>
+          </select>
+        </label>
+        <button type="button" className="ghost" onClick={onTestSound}>
+          Probar sonido
+        </button>
       </section>
 
       <section className="glass-card">
