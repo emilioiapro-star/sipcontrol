@@ -9,6 +9,7 @@ export type Drink = {
   defaultMl: number;
   abv?: number;
   favorite: boolean;
+  sortOrder: number;
   createdAt: string;
 };
 

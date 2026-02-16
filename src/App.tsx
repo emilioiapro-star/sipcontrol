@@ -44,7 +44,7 @@ function App() {
   const [lockState, setLockState] = useState<'locked' | 'unlocked'>('unlocked');
   const [pinSetupMode, setPinSetupMode] = useState<'none' | 'setup' | 'change'>('none');
 
-  const drinks = useLiveQuery(() => db.drinks.orderBy('createdAt').toArray(), [], [] as Drink[]);
+  const drinks = useLiveQuery(() => db.drinks.orderBy('sortOrder').toArray(), [], [] as Drink[]);
   const settings = useLiveQuery(() => db.settings.get('app'), [], null);
 
   const todayKey = toDayKey(new Date());
@@ -179,6 +179,7 @@ function App() {
     const drink: Drink = {
       ...payload,
       id: makeId('drink'),
+      sortOrder: drinks.length,
       createdAt: new Date().toISOString(),
     };
     await db.drinks.add(drink);
@@ -198,13 +199,50 @@ function App() {
       const liveSettings = await db.settings.get('app');
       if (!liveSettings) return;
       if (liveSettings.defaultDrinkId === drink.id) {
-        const candidate = await db.drinks.orderBy('createdAt').first();
+        const candidate = await db.drinks.orderBy('sortOrder').first();
         if (candidate) {
           await db.settings.put({ ...liveSettings, defaultDrinkId: candidate.id });
         }
       }
     });
     setToast('Bebida eliminada.');
+  };
+
+  const reorderDrinks = async (draggedId: string, targetId: string) => {
+    const ordered = [...drinks].sort((a, b) => a.sortOrder - b.sortOrder);
+    const fromIndex = ordered.findIndex((drink) => drink.id === draggedId);
+    const toIndex = ordered.findIndex((drink) => drink.id === targetId);
+    if (fromIndex < 0 || toIndex < 0) return;
+
+    const [moved] = ordered.splice(fromIndex, 1);
+    ordered.splice(toIndex, 0, moved);
+
+    await db.drinks.bulkPut(
+      ordered.map((drink, index) => ({
+        ...drink,
+        sortOrder: index,
+      }))
+    );
+  };
+
+  const deleteEvent = async (eventId: string) => {
+    await db.events.delete(eventId);
+    setToast('Evento eliminado.');
+  };
+
+  const updateEvent = async (eventId: string, drinkId: string, tsISO: string) => {
+    const oldEvent = await db.events.get(eventId);
+    if (!oldEvent) return;
+    const drink = await db.drinks.get(drinkId);
+    await db.events.put({
+      ...oldEvent,
+      drinkId,
+      tsISO,
+      dayKey: toDayKey(new Date(tsISO)),
+      mlOverride: drink?.defaultMl ?? oldEvent.mlOverride,
+      abvOverride: drink?.abv ?? oldEvent.abvOverride,
+    });
+    setToast('Evento actualizado.');
   };
 
   const setDefaultDrink = async (drinkId: string) => {
@@ -290,12 +328,13 @@ function App() {
 
         {activeTab === 'drinks' && (
           <DrinksScreen
-            drinks={[...drinks].sort((a, b) => Number(b.favorite) - Number(a.favorite))}
+            drinks={drinks}
             defaultDrinkId={settings.defaultDrinkId}
             onSetDefault={setDefaultDrink}
             onToggleFavorite={(drink) => db.drinks.put({ ...drink, favorite: !drink.favorite })}
             onEdit={(drink) => setDrinkModal(drink)}
             onDelete={deleteDrink}
+            onReorder={reorderDrinks}
             onCreate={() => setDrinkModal('new')}
           />
         )}
@@ -353,8 +392,10 @@ function App() {
         <DayEventsModal
           dayKey={dayModalKey}
           events={eventsForDay}
-          drinksMap={drinksMap}
+          drinks={drinks}
           onClose={() => setDayModalKey(null)}
+          onDeleteEvent={deleteEvent}
+          onUpdateEvent={updateEvent}
         />
       )}
 

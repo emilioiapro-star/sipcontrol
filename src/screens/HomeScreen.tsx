@@ -28,7 +28,6 @@ export const HomeScreen = ({
     <div className="screen-col">
       <header>
         <h1>SipControl</h1>
-        <p className="muted">Control personal de bebidas</p>
       </header>
 
       <GlassCard className="hero-card">

@@ -67,11 +67,16 @@ export const parseAndImport = async (file: File): Promise<void> => {
     throw new Error('Archivo inválido o corrupto.');
   }
 
+  const normalizedDrinks = drinks.map((drink, index) => ({
+    ...drink,
+    sortOrder: typeof drink.sortOrder === 'number' ? drink.sortOrder : index,
+  }));
+
   await db.transaction('rw', db.drinks, db.events, db.settings, async () => {
     await db.drinks.clear();
     await db.events.clear();
     await db.settings.clear();
-    await db.drinks.bulkPut(drinks);
+    await db.drinks.bulkPut(normalizedDrinks);
     await db.events.bulkPut(events);
     await db.settings.put(settings);
   });

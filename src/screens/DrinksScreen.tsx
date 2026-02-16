@@ -7,6 +7,7 @@ type Props = {
   onToggleFavorite: (drink: Drink) => void;
   onEdit: (drink: Drink) => void;
   onDelete: (drink: Drink) => void;
+  onReorder: (draggedId: string, targetId: string) => void;
   onCreate: () => void;
 };
 
@@ -17,6 +18,7 @@ export const DrinksScreen = ({
   onToggleFavorite,
   onEdit,
   onDelete,
+  onReorder,
   onCreate,
 }: Props) => {
   return (
@@ -30,7 +32,25 @@ export const DrinksScreen = ({
 
       <div className="list-col">
         {drinks.map((drink) => (
-          <article className="glass-card drink-item" key={drink.id}>
+          <article
+            className="glass-card drink-item"
+            key={drink.id}
+            draggable
+            onDragStart={(event) => {
+              event.dataTransfer.setData('text/plain', drink.id);
+              event.dataTransfer.effectAllowed = 'move';
+            }}
+            onDragOver={(event) => {
+              event.preventDefault();
+              event.dataTransfer.dropEffect = 'move';
+            }}
+            onDrop={(event) => {
+              event.preventDefault();
+              const draggedId = event.dataTransfer.getData('text/plain');
+              if (!draggedId || draggedId === drink.id) return;
+              onReorder(draggedId, drink.id);
+            }}
+          >
             <div>
               <h3>
                 {drink.emoji} {drink.name}
@@ -41,6 +61,9 @@ export const DrinksScreen = ({
               </p>
             </div>
             <div className="drink-actions">
+              <span className="drag-hint" title="Arrastra para reordenar">
+                ↕
+              </span>
               <button type="button" className="ghost" onClick={() => onToggleFavorite(drink)}>
                 {drink.favorite ? '★' : '☆'}
               </button>

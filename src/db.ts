@@ -13,6 +13,24 @@ class SipControlDB extends Dexie {
       events: 'id,dayKey,drinkId,tsISO,[dayKey+drinkId]',
       settings: 'id',
     });
+    this.version(2)
+      .stores({
+        drinks: 'id,name,category,favorite,sortOrder,createdAt',
+        events: 'id,dayKey,drinkId,tsISO,[dayKey+drinkId]',
+        settings: 'id',
+      })
+      .upgrade(async (tx) => {
+        const drinks = await tx.table<Drink, string>('drinks').toArray();
+        const sorted = drinks.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+        await Promise.all(
+          sorted.map((drink, index) =>
+            tx.table<Drink, string>('drinks').put({
+              ...drink,
+              sortOrder: typeof drink.sortOrder === 'number' ? drink.sortOrder : index,
+            })
+          )
+        );
+      });
   }
 }
 
@@ -33,6 +51,7 @@ export const ensureSeedData = async (): Promise<void> => {
     defaultMl: 330,
     abv: 5,
     favorite: true,
+    sortOrder: 0,
     createdAt: now,
   };
 
