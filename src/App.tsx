@@ -212,11 +212,28 @@ function App() {
     }
 
     const now = new Date();
+    const dayKey = toDayKey(now);
+    const predictedCount = todayEvents.length + 1;
+    const reachedOrExceeded = predictedCount >= liveSettings.dailyLimitCount;
+    const selectedSound = liveSettings.alertSoundType ?? 'crystal';
+
+    if (reachedOrExceeded) {
+      const msg =
+        predictedCount === liveSettings.dailyLimitCount
+          ? `Límite diario alcanzado (${predictedCount}/${liveSettings.dailyLimitCount}).`
+          : `Límite superado (${predictedCount}/${liveSettings.dailyLimitCount}).`;
+      setToast(msg);
+      if ('vibrate' in navigator) navigator.vibrate([160, 90, 160]);
+      if (liveSettings.alertSoundEnabled) {
+        void playLimitSound(selectedSound);
+      }
+    }
+
     const event: DrinkEvent = {
       id: makeId('event'),
       drinkId,
       tsISO: now.toISOString(),
-      dayKey: toDayKey(now),
+      dayKey,
       quantity: 1,
       abvOverride: drink.abv,
       mlOverride: drink.defaultMl,
@@ -224,17 +241,7 @@ function App() {
 
     await db.events.add(event);
 
-    const newCount = await db.events.where('dayKey').equals(event.dayKey).count();
-    const selectedSound = liveSettings.alertSoundType ?? 'crystal';
-    if (newCount >= liveSettings.dailyLimitCount) {
-      const msg =
-        newCount === liveSettings.dailyLimitCount
-          ? `Límite diario alcanzado (${newCount}/${liveSettings.dailyLimitCount}).`
-          : `Límite superado (${newCount}/${liveSettings.dailyLimitCount}).`;
-      setToast(msg);
-      if ('vibrate' in navigator) navigator.vibrate([160, 90, 160]);
-      if (liveSettings.alertSoundEnabled) await playLimitSound(selectedSound);
-    } else {
+    if (!reachedOrExceeded) {
       setToast(`+1 ${drink.emoji} ${drink.name}`);
     }
   };
@@ -329,6 +336,24 @@ function App() {
       abvOverride: drink?.abv ?? oldEvent.abvOverride,
     });
     setToast('Evento actualizado.');
+  };
+
+  const createEventForDay = async (dayKey: string, drinkId: string, timeHHMM: string) => {
+    const drink = await db.drinks.get(drinkId);
+    if (!drink) return;
+    const localDate = new Date(`${dayKey}T${timeHHMM}`);
+    const tsISO = localDate.toISOString();
+    const event: DrinkEvent = {
+      id: makeId('event'),
+      drinkId,
+      tsISO,
+      dayKey,
+      quantity: 1,
+      abvOverride: drink.abv,
+      mlOverride: drink.defaultMl,
+    };
+    await db.events.add(event);
+    setToast(`Consumición añadida en ${dayKey}.`);
   };
 
   const setDefaultDrink = async (drinkId: string) => {
@@ -484,9 +509,11 @@ function App() {
           dayKey={dayModalKey}
           events={eventsForDay}
           drinks={drinks}
+          defaultDrinkId={settings.defaultDrinkId}
           onClose={() => setDayModalKey(null)}
           onDeleteEvent={deleteEvent}
           onUpdateEvent={updateEvent}
+          onCreateEvent={createEventForDay}
         />
       )}
 

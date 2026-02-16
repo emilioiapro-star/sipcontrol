@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Drink, DrinkEvent } from '../types';
 import { formatTime } from '../utils/date';
 
@@ -6,9 +6,11 @@ type Props = {
   dayKey: string;
   events: DrinkEvent[];
   drinks: Drink[];
+  defaultDrinkId: string;
   onClose: () => void;
   onDeleteEvent: (eventId: string) => void;
   onUpdateEvent: (eventId: string, drinkId: string, tsISO: string) => void;
+  onCreateEvent: (dayKey: string, drinkId: string, timeHHMM: string) => void;
 };
 
 const toInputDateTime = (iso: string): string => {
@@ -21,17 +23,34 @@ const toInputDateTime = (iso: string): string => {
   return `${y}-${m}-${d}T${hh}:${mm}`;
 };
 
+const currentTimeHHMM = (): string => {
+  const now = new Date();
+  const hh = `${now.getHours()}`.padStart(2, '0');
+  const mm = `${now.getMinutes()}`.padStart(2, '0');
+  return `${hh}:${mm}`;
+};
+
 export const DayEventsModal = ({
   dayKey,
   events,
   drinks,
+  defaultDrinkId,
   onClose,
   onDeleteEvent,
   onUpdateEvent,
+  onCreateEvent,
 }: Props) => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingDrinkId, setEditingDrinkId] = useState<string>('');
   const [editingDateTime, setEditingDateTime] = useState<string>('');
+  const [newDrinkId, setNewDrinkId] = useState<string>(defaultDrinkId || drinks[0]?.id || '');
+  const [newTime, setNewTime] = useState<string>(currentTimeHHMM());
+
+  useEffect(() => {
+    setNewDrinkId(defaultDrinkId || drinks[0]?.id || '');
+    setNewTime(currentTimeHHMM());
+  }, [dayKey, defaultDrinkId, drinks]);
+
   const drinksMap = new Map(drinks.map((drink) => [drink.id, drink]));
 
   const startEdit = (event: DrinkEvent) => {
@@ -53,10 +72,33 @@ export const DayEventsModal = ({
     cancelEdit();
   };
 
+  const addEventToDay = () => {
+    if (!newDrinkId || !newTime) return;
+    onCreateEvent(dayKey, newDrinkId, newTime);
+  };
+
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal glass-card" onClick={(e) => e.stopPropagation()}>
         <h3>{dayKey}</h3>
+
+        <section className="event-create-box">
+          <h4>Añadir consumición en este día</h4>
+          <div className="event-edit-grid">
+            <select value={newDrinkId} onChange={(e) => setNewDrinkId(e.target.value)}>
+              {drinks.map((drinkOption) => (
+                <option key={drinkOption.id} value={drinkOption.id}>
+                  {drinkOption.emoji} {drinkOption.name}
+                </option>
+              ))}
+            </select>
+            <input type="time" value={newTime} onChange={(e) => setNewTime(e.target.value)} />
+            <button type="button" className="primary" onClick={addEventToDay}>
+              Añadir al día {dayKey}
+            </button>
+          </div>
+        </section>
+
         {events.length === 0 && <p className="muted">No hay consumiciones registradas.</p>}
         <ul className="event-list">
           {events.map((event) => {
