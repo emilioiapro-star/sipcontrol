@@ -19,7 +19,9 @@ const makeId = (prefix: string) => `${prefix}-${crypto.randomUUID()}`;
 let sharedAudioContext: AudioContext | null = null;
 
 const getAudioContext = (): AudioContext | null => {
-  const AudioCtx = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+  const AudioCtx =
+    window.AudioContext ||
+    (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
   if (!AudioCtx) return null;
   if (!sharedAudioContext) {
     sharedAudioContext = new AudioCtx();
@@ -31,7 +33,11 @@ const playLimitSound = async (soundType: AlertSoundType = 'crystal') => {
   const ctx = getAudioContext();
   if (!ctx) return;
   if (ctx.state === 'suspended') {
-    await ctx.resume();
+    try {
+      await ctx.resume();
+    } catch {
+      return;
+    }
   }
 
   const now = ctx.currentTime;
@@ -58,26 +64,27 @@ const playLimitSound = async (soundType: AlertSoundType = 'crystal') => {
   };
 
   if (soundType === 'crystal') {
-    makeTone(now, 950, 760, 0.18, 'triangle', 0.05);
+    makeTone(now, 980, 720, 0.22, 'triangle', 0.12);
     return;
   }
   if (soundType === 'pulse') {
-    makeTone(now, 520, 520, 0.12, 'sine', 0.045);
-    makeTone(now + 0.15, 720, 620, 0.14, 'sine', 0.045);
+    makeTone(now, 520, 520, 0.16, 'sine', 0.1);
+    makeTone(now + 0.18, 760, 620, 0.18, 'sine', 0.1);
     return;
   }
   if (soundType === 'beep') {
-    makeTone(now, 1100, 1080, 0.08, 'square', 0.035);
-    makeTone(now + 0.11, 1100, 1080, 0.08, 'square', 0.035);
+    makeTone(now, 1180, 1120, 0.1, 'square', 0.09);
+    makeTone(now + 0.13, 1180, 1120, 0.1, 'square', 0.09);
     return;
   }
-  makeTone(now, 880, 780, 0.12, 'sawtooth', 0.04);
-  makeTone(now + 0.14, 880, 780, 0.12, 'sawtooth', 0.04);
-  makeTone(now + 0.28, 880, 780, 0.12, 'sawtooth', 0.04);
+  makeTone(now, 900, 760, 0.14, 'sawtooth', 0.1);
+  makeTone(now + 0.16, 900, 760, 0.14, 'sawtooth', 0.1);
+  makeTone(now + 0.32, 900, 760, 0.14, 'sawtooth', 0.1);
 };
 
 function App() {
   const [ready, setReady] = useState(false);
+  const [showLaunchSplash, setShowLaunchSplash] = useState(true);
   const [activeTab, setActiveTab] = useState<TabId>('home');
   const [monthDate, setMonthDate] = useState(() => new Date());
   const [dayModalKey, setDayModalKey] = useState<string | null>(null);
@@ -115,6 +122,35 @@ function App() {
 
   useEffect(() => {
     ensureSeedData().finally(() => setReady(true));
+  }, []);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setShowLaunchSplash(false), 1800);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const unlockAudio = async () => {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      if (ctx.state === 'suspended') {
+        try {
+          await ctx.resume();
+        } catch {
+          // Safari iOS can reject resume if gesture context is lost.
+        }
+      }
+    };
+
+    window.addEventListener('touchstart', unlockAudio, { passive: true });
+    window.addEventListener('pointerdown', unlockAudio, { passive: true });
+    window.addEventListener('keydown', unlockAudio);
+
+    return () => {
+      window.removeEventListener('touchstart', unlockAudio);
+      window.removeEventListener('pointerdown', unlockAudio);
+      window.removeEventListener('keydown', unlockAudio);
+    };
   }, []);
 
   useEffect(() => {
@@ -491,6 +527,14 @@ function App() {
           subtitle="Necesario para desbloquear al abrir SipControl"
           onSetup={({ pinHash, pinSalt }) => handleSetupPin(pinHash, pinSalt)}
         />
+      )}
+
+      {showLaunchSplash && (
+        <div className="launch-splash" onClick={() => setShowLaunchSplash(false)}>
+          <div className="launch-splash-card">
+            <img src={`${import.meta.env.BASE_URL}icons/source-icon.png`} alt="SipControl" />
+          </div>
+        </div>
       )}
 
       {toast && <div className="toast">{toast}</div>}
