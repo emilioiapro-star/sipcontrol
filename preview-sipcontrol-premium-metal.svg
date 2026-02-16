@@ -1,0 +1,97 @@
+<svg width="1170" height="2532" viewBox="0 0 1170 2532" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1170" y2="2532" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#040608"/>
+      <stop offset="0.57" stop-color="#0A1218"/>
+      <stop offset="1" stop-color="#1A0F14"/>
+    </linearGradient>
+    <radialGradient id="g1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(300 320) rotate(38) scale(760 760)">
+      <stop stop-color="#2E8DFF" stop-opacity="0.34"/>
+      <stop offset="1" stop-color="#2E8DFF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="g2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(930 550) rotate(140) scale(680 680)">
+      <stop stop-color="#28C7A7" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#28C7A7" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="g3" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(900 1900) rotate(180) scale(620 620)">
+      <stop stop-color="#7A1F2E" stop-opacity="0.32"/>
+      <stop offset="1" stop-color="#7A1F2E" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="glass" x1="120" y1="300" x2="990" y2="1060" gradientUnits="userSpaceOnUse">
+      <stop stop-color="rgba(255,255,255,0.24)"/>
+      <stop offset="0.35" stop-color="rgba(255,255,255,0.06)"/>
+      <stop offset="1" stop-color="rgba(0,0,0,0.2)"/>
+    </linearGradient>
+    <linearGradient id="cta" x1="427" y1="670" x2="745" y2="982" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2E8DFF"/>
+      <stop offset="0.52" stop-color="#28C7A7"/>
+      <stop offset="1" stop-color="#1F6DFF"/>
+    </linearGradient>
+    <filter id="softGlow" x="300" y="540" width="570" height="570" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="36"/>
+    </filter>
+  </defs>
+
+  <rect width="1170" height="2532" fill="url(#bg)"/>
+  <rect width="1170" height="2532" fill="url(#g1)"/>
+  <rect width="1170" height="2532" fill="url(#g2)"/>
+  <rect width="1170" height="2532" fill="url(#g3)"/>
+
+  <text x="88" y="182" fill="#ECF8FF" font-size="74" font-family="Arial" font-weight="700">SipControl</text>
+  <text x="88" y="238" fill="#BFD5E4" font-size="36" font-family="Arial">Premium Metal Glass</text>
+
+  <rect x="64" y="300" width="1042" height="760" rx="66" fill="rgba(180,214,236,0.1)"/>
+  <rect x="64" y="300" width="1042" height="760" rx="66" fill="url(#glass)"/>
+  <rect x="64.5" y="300.5" width="1041" height="759" rx="65.5" stroke="rgba(224,246,255,0.3)"/>
+
+  <path d="M130 360C250 330 365 330 485 360" stroke="rgba(255,255,255,0.55)" stroke-width="4" stroke-linecap="round"/>
+
+  <text x="120" y="392" fill="#BFD5E4" font-size="34" font-family="Arial">Bebida actual</text>
+  <text x="120" y="472" fill="#ECF8FF" font-size="64" font-family="Arial" font-weight="700">🍺 Cerveza</text>
+
+  <rect x="120" y="530" width="430" height="170" rx="34" fill="rgba(180,214,236,0.08)"/>
+  <rect x="620" y="530" width="430" height="170" rx="34" fill="rgba(180,214,236,0.08)"/>
+  <rect x="120.5" y="530.5" width="429" height="169" rx="33.5" stroke="rgba(255,255,255,0.2)"/>
+  <rect x="620.5" y="530.5" width="429" height="169" rx="33.5" stroke="rgba(255,255,255,0.2)"/>
+
+  <text x="170" y="622" fill="#ECF8FF" font-size="62" font-family="Arial" font-weight="700">2</text>
+  <text x="170" y="670" fill="#BFD5E4" font-size="30" font-family="Arial">Hoy</text>
+  <text x="670" y="622" fill="#ECF8FF" font-size="62" font-family="Arial" font-weight="700">3</text>
+  <text x="670" y="670" fill="#BFD5E4" font-size="30" font-family="Arial">Límite</text>
+
+  <circle cx="585" cy="824" r="150" fill="#28C7A7" fill-opacity="0.36" filter="url(#softGlow)"/>
+  <circle cx="585" cy="824" r="156" fill="url(#cta)"/>
+  <ellipse cx="560" cy="770" rx="56" ry="22" fill="rgba(255,255,255,0.58)" transform="rotate(-16 560 770)"/>
+  <text x="530" y="853" fill="#FFFFFF" font-size="112" font-family="Arial" font-weight="700">+1</text>
+
+  <rect x="335" y="958" width="500" height="82" rx="26" fill="rgba(255,255,255,0.12)"/>
+  <text x="430" y="1010" fill="#ECF8FF" font-size="36" font-family="Arial">Deshacer último</text>
+
+  <rect x="64" y="1110" width="506" height="290" rx="46" fill="rgba(180,214,236,0.1)"/>
+  <rect x="600" y="1110" width="506" height="290" rx="46" fill="rgba(180,214,236,0.1)"/>
+  <rect x="64" y="1430" width="506" height="290" rx="46" fill="rgba(180,214,236,0.1)"/>
+  <rect x="600" y="1430" width="506" height="290" rx="46" fill="rgba(180,214,236,0.1)"/>
+  <rect x="64.5" y="1110.5" width="505" height="289" rx="45.5" stroke="rgba(255,255,255,0.2)"/>
+  <rect x="600.5" y="1110.5" width="505" height="289" rx="45.5" stroke="rgba(255,255,255,0.2)"/>
+  <rect x="64.5" y="1430.5" width="505" height="289" rx="45.5" stroke="rgba(255,255,255,0.2)"/>
+  <rect x="600.5" y="1430.5" width="505" height="289" rx="45.5" stroke="rgba(255,255,255,0.2)"/>
+
+  <text x="116" y="1205" fill="#ECF8FF" font-size="44" font-family="Arial" font-weight="700">Cambiar bebida</text>
+  <text x="116" y="1275" fill="#BFD5E4" font-size="32" font-family="Arial">Selector rápido</text>
+  <text x="652" y="1205" fill="#ECF8FF" font-size="44" font-family="Arial" font-weight="700">Límite</text>
+  <text x="652" y="1275" fill="#BFD5E4" font-size="32" font-family="Arial">3 bebidas/día</text>
+  <text x="116" y="1525" fill="#ECF8FF" font-size="44" font-family="Arial" font-weight="700">Ver calendario</text>
+  <text x="116" y="1595" fill="#BFD5E4" font-size="32" font-family="Arial">Mes + detalle por día</text>
+  <text x="652" y="1525" fill="#ECF8FF" font-size="44" font-family="Arial" font-weight="700">Exportar</text>
+  <text x="652" y="1595" fill="#BFD5E4" font-size="32" font-family="Arial">Backup JSON</text>
+
+  <rect x="104" y="2240" width="962" height="200" rx="68" fill="rgba(7,12,18,0.84)"/>
+  <rect x="104.5" y="2240.5" width="961" height="199" rx="67.5" stroke="rgba(224,246,255,0.24)"/>
+  <path d="M180 2262C380 2248 790 2248 990 2262" stroke="rgba(255,255,255,0.4)" stroke-width="3" stroke-linecap="round"/>
+
+  <text x="188" y="2354" fill="#9CB3C2" font-size="34" font-family="Arial">Home</text>
+  <text x="390" y="2354" fill="#9CB3C2" font-size="34" font-family="Arial">Calendar</text>
+  <text x="610" y="2354" fill="#ECF8FF" font-size="34" font-family="Arial" font-weight="700">Add</text>
+  <text x="780" y="2354" fill="#9CB3C2" font-size="34" font-family="Arial">Drinks</text>
+  <text x="940" y="2354" fill="#9CB3C2" font-size="34" font-family="Arial">Settings</text>
+</svg>

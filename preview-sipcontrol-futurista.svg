@@ -1,0 +1,79 @@
+<svg width="1170" height="2532" viewBox="0 0 1170 2532" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1170" y2="2532" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#05080C"/>
+      <stop offset="0.55" stop-color="#0D1822"/>
+      <stop offset="1" stop-color="#190F16"/>
+    </linearGradient>
+    <radialGradient id="glow1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(290 330) rotate(35) scale(760 760)">
+      <stop stop-color="#1F7DFF" stop-opacity="0.34"/>
+      <stop offset="1" stop-color="#1F7DFF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(920 540) rotate(140) scale(680 680)">
+      <stop stop-color="#17C49B" stop-opacity="0.31"/>
+      <stop offset="1" stop-color="#17C49B" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow3" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(920 1880) rotate(170) scale(620 620)">
+      <stop stop-color="#7B1D2D" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#7B1D2D" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="cta" x1="429" y1="668" x2="742" y2="980" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1F7DFF"/>
+      <stop offset="0.58" stop-color="#17C49B"/>
+      <stop offset="1" stop-color="#0FA77F"/>
+    </linearGradient>
+    <filter id="blur" x="-20" y="-20" width="140" height="140">
+      <feGaussianBlur stdDeviation="12"/>
+    </filter>
+  </defs>
+
+  <rect width="1170" height="2532" fill="url(#bg)"/>
+  <rect width="1170" height="2532" fill="url(#glow1)"/>
+  <rect width="1170" height="2532" fill="url(#glow2)"/>
+  <rect width="1170" height="2532" fill="url(#glow3)"/>
+
+  <text x="88" y="182" fill="#E8F5FF" font-size="74" font-family="Arial" font-weight="700">SipControl</text>
+  <text x="88" y="238" fill="#B8CCD9" font-size="36" font-family="Arial">Modo futurista glass + metal</text>
+
+  <rect x="64" y="300" width="1042" height="760" rx="66" fill="rgba(170,210,230,0.11)" stroke="rgba(220,245,255,0.24)"/>
+  <text x="120" y="392" fill="#B8CCD9" font-size="34" font-family="Arial">Bebida actual</text>
+  <text x="120" y="472" fill="#E8F5FF" font-size="64" font-family="Arial" font-weight="700">🍺 Cerveza</text>
+
+  <rect x="120" y="530" width="430" height="170" rx="34" fill="rgba(170,210,230,0.08)"/>
+  <rect x="620" y="530" width="430" height="170" rx="34" fill="rgba(170,210,230,0.08)"/>
+  <text x="170" y="622" fill="#E8F5FF" font-size="62" font-family="Arial" font-weight="700">2</text>
+  <text x="170" y="670" fill="#B8CCD9" font-size="30" font-family="Arial">Hoy</text>
+  <text x="670" y="622" fill="#E8F5FF" font-size="62" font-family="Arial" font-weight="700">3</text>
+  <text x="670" y="670" fill="#B8CCD9" font-size="30" font-family="Arial">Límite</text>
+
+  <circle cx="585" cy="824" r="156" fill="url(#cta)"/>
+  <circle cx="585" cy="824" r="190" fill="#18B9A2" fill-opacity="0.24" filter="url(#blur)"/>
+  <text x="530" y="853" fill="#FFFFFF" font-size="112" font-family="Arial" font-weight="700">+1</text>
+
+  <rect x="335" y="958" width="500" height="82" rx="26" fill="rgba(255,255,255,0.12)"/>
+  <text x="430" y="1010" fill="#E8F5FF" font-size="36" font-family="Arial">Deshacer último</text>
+
+  <rect x="64" y="1110" width="506" height="290" rx="46" fill="rgba(170,210,230,0.1)" stroke="rgba(220,245,255,0.2)"/>
+  <rect x="600" y="1110" width="506" height="290" rx="46" fill="rgba(170,210,230,0.1)" stroke="rgba(220,245,255,0.2)"/>
+  <rect x="64" y="1430" width="506" height="290" rx="46" fill="rgba(170,210,230,0.1)" stroke="rgba(220,245,255,0.2)"/>
+  <rect x="600" y="1430" width="506" height="290" rx="46" fill="rgba(170,210,230,0.1)" stroke="rgba(220,245,255,0.2)"/>
+
+  <text x="116" y="1205" fill="#E8F5FF" font-size="44" font-family="Arial" font-weight="700">Cambiar bebida</text>
+  <text x="116" y="1275" fill="#B8CCD9" font-size="32" font-family="Arial">Selector rápido</text>
+
+  <text x="652" y="1205" fill="#E8F5FF" font-size="44" font-family="Arial" font-weight="700">Límite</text>
+  <text x="652" y="1275" fill="#B8CCD9" font-size="32" font-family="Arial">3 bebidas/día</text>
+
+  <text x="116" y="1525" fill="#E8F5FF" font-size="44" font-family="Arial" font-weight="700">Ver calendario</text>
+  <text x="116" y="1595" fill="#B8CCD9" font-size="32" font-family="Arial">Mes + detalle por día</text>
+
+  <text x="652" y="1525" fill="#E8F5FF" font-size="44" font-family="Arial" font-weight="700">Exportar</text>
+  <text x="652" y="1595" fill="#B8CCD9" font-size="32" font-family="Arial">Backup JSON</text>
+
+  <rect x="104" y="2240" width="962" height="200" rx="68" fill="rgba(6,10,15,0.82)" stroke="rgba(220,245,255,0.2)"/>
+  <text x="188" y="2354" fill="#93AAB8" font-size="34" font-family="Arial">Home</text>
+  <text x="390" y="2354" fill="#93AAB8" font-size="34" font-family="Arial">Calendar</text>
+  <text x="610" y="2354" fill="#E8F5FF" font-size="34" font-family="Arial" font-weight="700">Add</text>
+  <text x="780" y="2354" fill="#93AAB8" font-size="34" font-family="Arial">Drinks</text>
+  <text x="940" y="2354" fill="#93AAB8" font-size="34" font-family="Arial">Settings</text>
+</svg>
