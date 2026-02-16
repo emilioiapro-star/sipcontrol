@@ -49,7 +49,13 @@ export const DayEventsModal = ({
   useEffect(() => {
     setNewDrinkId(defaultDrinkId || drinks[0]?.id || '');
     setNewTime(currentTimeHHMM());
-  }, [dayKey, defaultDrinkId, drinks]);
+  }, [dayKey, defaultDrinkId]);
+
+  useEffect(() => {
+    if (!drinks.some((drink) => drink.id === newDrinkId)) {
+      setNewDrinkId(defaultDrinkId || drinks[0]?.id || '');
+    }
+  }, [drinks, newDrinkId, defaultDrinkId]);
 
   const drinksMap = new Map(drinks.map((drink) => [drink.id, drink]));
 

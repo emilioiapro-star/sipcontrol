@@ -471,10 +471,6 @@ function App() {
           />
         )}
       </main>
-
-      <button type="button" className="fab" onClick={addEvent} aria-label="Añadir consumición">
-        +
-      </button>
       <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
 
       {pickerOpen && (
