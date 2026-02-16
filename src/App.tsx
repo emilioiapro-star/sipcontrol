@@ -16,19 +16,39 @@ import { PinGate } from './components/PinGate';
 
 const makeId = (prefix: string) => `${prefix}-${crypto.randomUUID()}`;
 
-const playLimitSound = () => {
+let sharedAudioContext: AudioContext | null = null;
+
+const getAudioContext = (): AudioContext | null => {
   const AudioCtx = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-  if (!AudioCtx) return;
-  const ctx = new AudioCtx();
+  if (!AudioCtx) return null;
+  if (!sharedAudioContext) {
+    sharedAudioContext = new AudioCtx();
+  }
+  return sharedAudioContext;
+};
+
+const playLimitSound = async () => {
+  const ctx = getAudioContext();
+  if (!ctx) return;
+  if (ctx.state === 'suspended') {
+    await ctx.resume();
+  }
+
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
-  osc.type = 'sine';
-  osc.frequency.value = 880;
-  gain.gain.value = 0.04;
+  const now = ctx.currentTime;
+  osc.type = 'triangle';
+  osc.frequency.setValueAtTime(920, now);
+  osc.frequency.exponentialRampToValueAtTime(760, now + 0.16);
+
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.exponentialRampToValueAtTime(0.05, now + 0.015);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.17);
+
   osc.connect(gain);
   gain.connect(ctx.destination);
-  osc.start();
-  osc.stop(ctx.currentTime + 0.15);
+  osc.start(now);
+  osc.stop(now + 0.18);
 };
 
 function App() {
